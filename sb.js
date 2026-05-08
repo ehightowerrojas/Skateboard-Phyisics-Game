@@ -100,9 +100,16 @@ class Pushing extends Phaser.Scene {
         this.physics.add.existing(this.portal);
         this.portal.body.setAllowGravity(false);
 
-        this.physics.add.collider(this.player, this.portal, () => {
+        this.physics.add.overlap(this.player, this.portal, () => {
             console.log('collision!');
-            this.scene.start('ollie');
+            this.tweens.add({
+                targets: this.player,
+                scale: 0,
+                duration: 200,
+            }),
+            this.time.delayedCall(200, () => {
+                this.scene.start('ollie');
+            });
         }, null, this);
         // End Portal //
         
@@ -192,7 +199,7 @@ class Ollie extends Phaser.Scene {
         // End General Purpose Stuff //
 
         // Obstacles //
-        this.rail = this.add.rectangle(800, 890, 250, 20, 0xecc900);
+        this.rail = this.add.rectangle(800, 900, 250, 20, 0xecc900);
         this.physics.add.existing(this.rail, true);
         this.physics.add.collider(this.player, this.rail);
 
@@ -201,9 +208,16 @@ class Ollie extends Phaser.Scene {
         this.physics.add.existing(this.portal);
         this.portal.body.setAllowGravity(false);
 
-        this.physics.add.collider(this.player, this.portal, () => {
-            console.log('collision!');
-            this.scene.start('final');
+        this.physics.add.overlap(this.player, this.portal, () => {
+            console.log('collision!'),
+            this.tweens.add({
+                targets: this.player,
+                scale: 0,
+                duration: 200,
+            }),
+            this.time.delayedCall(500, () => {
+                this.scene.start('final');
+            });
         }, null, this);
         // End Portal //
         
