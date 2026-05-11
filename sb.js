@@ -39,8 +39,8 @@ class Intro extends Phaser.Scene {
 
         // Start Game //
         let background = this.add.image(this.w/2, this.h/2, 'background').setDepth(-1).setScale(0.75);
-        let introText1 = this.add.text(this.w/2, this.h/2 - 100, "Welcome to Skateboard Physics!", { fontSize: '64px Georgia', fill: '#fff' }).setOrigin(0.5);
-        let introText2 = this.add.text(this.w/2, this.h/2 + 50, "Click to Start", { fontSize: '50px Georgia', fill: '#fff' })
+        let introText1 = this.add.text(this.w/2, this.h/2 - 50, "Welcome to Skateboard Physics, by Evangel!", { fontSize: '64px Georgia', fill: '#fff' }).setOrigin(0.5);
+        let introText2 = this.add.text(this.w/2, this.h/2 + 100, "Click to Start", { fontSize: '50px Georgia', fill: '#fff' })
             .setOrigin(0.5)
             .setInteractive({useHandCursor: true})
             .on('pointerover', () => {
@@ -50,7 +50,7 @@ class Intro extends Phaser.Scene {
                 introText2.setStyle({ fill: '#fff' });
             })
             .on('pointerdown', () => {
-                this.scene.start('pushing');
+                this.scene.start('loadingScene1');
             });
         // End Start Game //
     }
@@ -65,6 +65,7 @@ class Pushing extends Phaser.Scene {
         this.load.image('fullscreenIcon', 'assets/fullscreenIcon-removebg-preview.png');   
         this.load.image('background', 'assets/photo-1475274047050-1d0c0975c63e.avif');
         this.load.image('portal', 'assets/传送门Ai素材-05BLADESL203999340_POP_RMA.png');
+        this.load.image('player', 'assets/45f18edae2d5d54fe594e7d365fd8dff-skateboard-side-view.png');
     }
     create() {
         // General Purpose Stuff //
@@ -76,8 +77,8 @@ class Pushing extends Phaser.Scene {
 
         let background = this.add.image(this.w/2, this.h/2, 'background').setDepth(-1).setScale(0.75);
 
-        this.player = this.add.rectangle(200, 935, 170, 50, 0x00ff00);
-        this.player.setDepth(2);
+        this.player = this.add.image(200, 955, 'player')
+            .setScale(0.4)
         this.physics.add.existing(this.player);
         this.player.body.setCollideWorldBounds(true);
 
@@ -109,7 +110,7 @@ class Pushing extends Phaser.Scene {
                 duration: 200,
             }),
             this.time.delayedCall(200, () => {
-                this.scene.start('ollie');
+                this.scene.start('loadingScene2');
             });
         }, null, this);
         // End Portal //
@@ -168,6 +169,7 @@ class Ollie extends Phaser.Scene {
         this.load.image('fullscreenIcon', 'assets/fullscreenIcon-removebg-preview.png');   
         this.load.image('background', 'assets/photo-1475274047050-1d0c0975c63e.avif');
         this.load.image('portal', 'assets/传送门Ai素材-05BLADESL203999340_POP_RMA.png');
+        this.load.image('player', 'assets/45f18edae2d5d54fe594e7d365fd8dff-skateboard-side-view.png');
     }
     create() {
         // General Purpose Stuff //
@@ -179,7 +181,8 @@ class Ollie extends Phaser.Scene {
 
         let background = this.add.image(this.w/2, this.h/2, 'background').setDepth(-1).setScale(0.75);
 
-        this.player = this.add.rectangle(200, 935, 170, 50, 0x00ff00);
+        this.player = this.add.image(200, 935, 'player')
+            .setScale(.4)
         this.player.setDepth(2);
         this.physics.add.existing(this.player);
         this.player.body.setCollideWorldBounds(true);
@@ -201,11 +204,13 @@ class Ollie extends Phaser.Scene {
         // End General Purpose Stuff //
 
         // Obstacles //
-        this.rail = this.add.rectangle(800, 900, 250, 20, 0xecc900);
+        this.rail = this.add.rectangle(800, 990, 250, 200, 0xecc900)
+            .setDepth(-1);
         this.physics.add.existing(this.rail, true);
         this.physics.add.collider(this.player, this.rail);
 
-        this.rail2 = this.add.rectangle(1200, 850, 250, 20, 0xecc900);
+        this.rail2 = this.add.rectangle(1200, 980, 250, 200, 0xecc900)
+            .setDepth(-1);
         this.physics.add.existing(this.rail2, true);
         this.physics.add.collider(this.player, this.rail2);
 
@@ -222,7 +227,7 @@ class Ollie extends Phaser.Scene {
                 duration: 200,
             }),
             this.time.delayedCall(500, () => {
-                this.scene.start('final');
+                this.scene.start('loadingScene3');
             });
         }, null, this);
         // End Portal //
@@ -292,6 +297,8 @@ class Final extends Phaser.Scene {
         this.load.image('fullscreenIcon', 'assets/fullscreenIcon-removebg-preview.png');   
         this.load.image('background', 'assets/photo-1475274047050-1d0c0975c63e.avif');
         this.load.image('portal', 'assets/传送门Ai素材-05BLADESL203999340_POP_RMA.png');
+        this.load.image('player', 'assets/45f18edae2d5d54fe594e7d365fd8dff-skateboard-side-view.png');
+        this.load.image('movingPlatform', 'assets/movingPlatform.jpg')
     }
     create() {
         // General Purpose Stuff //
@@ -303,7 +310,8 @@ class Final extends Phaser.Scene {
 
         let background = this.add.image(this.w/2, this.h/2, 'background').setDepth(-1).setScale(0.75);
 
-        this.player = this.add.rectangle(200, 935, 170, 50, 0x00ff00);
+        this.player = this.add.image(200, 935, 'player')
+            .setScale(.4);
         this.player.setDepth(2);
         this.physics.add.existing(this.player);
         this.player.body.setCollideWorldBounds(true);
@@ -325,30 +333,48 @@ class Final extends Phaser.Scene {
         // End General Purpose Stuff //
 
         // Obstacles //
-        this.rail = this.add.rectangle(800, 900, 250, 20, 0xecc900);
+        this.rail = this.add.rectangle(800, 992, 250, 200, 0xecc900)
+            .setDepth(-1);
         this.physics.add.existing(this.rail, true);
         this.physics.add.collider(this.player, this.rail);
 
-        // Portal //
-        this.portal = this.physics.add.image(this.w - 400, this.h - 300, 'portal').setScale(.025);
-        this.physics.add.existing(this.portal);
-        this.portal.body.setAllowGravity(false);
+        this.rail5 = this.add.rectangle(1100, 902, 500, 20, 0xecc900)
+            .setDepth(-1);
+        this.physics.add.existing(this.rail5, true);
+        this.physics.add.collider(this.player, this.rail5);
 
-        this.physics.add.overlap(this.player, this.portal, () => {
-            console.log('collision!'),
-            this.tweens.add({
-                targets: this.player,
-                scale: 0,
-                duration: 200,
-            }),
-            this.time.delayedCall(500, () => {
-                this.scene.start('final');
-            });
-        }, null, this);
-        // End Portal //
+        this.rail7 = this.add.rectangle(1450, 955, 250, 200, 0xecc900)
+            .setDepth(-1);
+        this.physics.add.existing(this.rail7, true);
+        this.physics.add.collider(this.player, this.rail7);
+
+        this.rail8 = this.add.rectangle(1750, 955, 400, 350, 0xecc900)
+            .setDepth(-1);
+        this.physics.add.existing(this.rail8, true);
+        this.physics.add.collider(this.player, this.rail8);
+
+        this.movingPlatform = this.physics.add.image(400, 300, 'movingPlatform')
+            .setScale(.2)
+            .setDepth(-1);
+
+        this.movingPlatform.body.setAllowGravity(false);
+        this.movingPlatform.setImmovable(true);
+
+        this.physics.add.collider(this.player, this.movingPlatform);
+
+        this.tweens.add({
+            targets: this.movingPlatform,
+            y: 1080,
+            duration: 5000,
+            yoyo: true,
+            loop: -1,
+            ease: "Linear"
+        });
+
+        // End Obstacles //
         
         // Text //
-        let instructions = this.add.text(950, 300, "Now... have fun!.", { fontSize: '40px Georgia', fill: '#fff' })
+        let instructions = this.add.text(950, 300, "You can do tricks by spinning your mouse!\n\n...have fun!", { fontSize: '40px Georgia', fill: '#fff' })
             .setOrigin(.5);
         // End Text //
 
@@ -376,8 +402,6 @@ class Final extends Phaser.Scene {
 
     update() {
 
-        this.portal.angle += 1; 
-
         const pointer = this.input.activePointer;
 
         if (this.cursors.space.isDown) {
@@ -400,6 +424,136 @@ class Final extends Phaser.Scene {
             
             this.player.body.setVelocityY(finalJump);
         }
+
+        // Player Tricks //
+        if (!this.player.body.touching.down) {
+            
+            const pointer = this.input.activePointer;
+            
+            let angle = Phaser.Math.Angle.Between(
+                this.player.x, 
+                this.player.y, 
+                pointer.worldX, 
+                pointer.worldY
+            );
+
+            // 4. Apply the rotation (Phaser uses radians for .rotation)
+            this.player.setRotation(angle);
+            
+        } else {
+            // Optional: Reset rotation to 0 when landing
+            this.player.setRotation(0);
+        }
+        // End Player Tricks //
+
+    }
+}
+
+class LoadingScene1 extends Phaser.Scene {
+    constructor() {
+        super("loadingScene1")
+    } 
+
+    preload() {
+        this.load.image('background', 'assets/photo-1475274047050-1d0c0975c63e.avif');
+        this.load.image('fullscreenIcon', 'assets/fullscreenIcon-removebg-preview.png');   
+        this.load.image('player', 'assets/45f18edae2d5d54fe594e7d365fd8dff-skateboard-side-view.png');
+        this.load.image('loading', 'assets/loading.jpg');
+
+        this.load.on('progress', (value) => {
+            console.log(Math.floor(value * 100) + '%');
+        });
+    }
+
+    create() {
+
+        this.add.rectangle(1920/2, 1080/2, 1920, 1080, 0xffffff);
+        this.add.text(25, 625, 'Loading first skate park...', { fontSize: '40px Georgia', color: '#000000'});
+        this.loading = this.add.image(-200, 870, 'loading')
+            .setScale(.75); 
+
+        this.tweens.add({
+            targets: this.loading,
+            x: 2500,
+            duration: 1500,
+            ease: 'Sine.InOut'
+        })
+
+        this.time.delayedCall(1500, () => {
+            this.scene.start('pushing'); 
+        });
+    }
+}
+
+class LoadingScene2 extends Phaser.Scene {
+    constructor() {
+        super("loadingScene2")
+    } 
+
+    preload() {
+        this.load.image('background', 'assets/photo-1475274047050-1d0c0975c63e.avif');
+        this.load.image('fullscreenIcon', 'assets/fullscreenIcon-removebg-preview.png');   
+        this.load.image('player', 'assets/45f18edae2d5d54fe594e7d365fd8dff-skateboard-side-view.png');
+        this.load.image('loading', 'assets/loading.jpg');
+
+        this.load.on('progress', (value) => {
+            console.log(Math.floor(value * 100) + '%');
+        });
+    }
+
+    create() {
+
+        this.add.rectangle(1920/2, 1080/2, 1920, 1080, 0xffffff);
+        this.add.text(25, 625, 'Loading your second skate park...', { fontSize: '40px Georgia', color: '#000000'});
+        this.loading = this.add.image(-200, 870, 'loading')
+            .setScale(.75);
+
+        this.tweens.add({
+            targets: this.loading,
+            x: 2500,
+            duration: 1500,
+            ease: 'Sine.InOut'
+        })
+
+        this.time.delayedCall(1500, () => {
+            this.scene.start('ollie'); 
+        });
+    }
+}
+
+class LoadingScene3 extends Phaser.Scene {
+    constructor() {
+        super("loadingScene3")
+    } 
+
+    preload() {
+        this.load.image('background', 'assets/photo-1475274047050-1d0c0975c63e.avif');
+        this.load.image('fullscreenIcon', 'assets/fullscreenIcon-removebg-preview.png');   
+        this.load.image('player', 'assets/45f18edae2d5d54fe594e7d365fd8dff-skateboard-side-view.png');
+        this.load.image('loading', 'assets/loading.jpg');
+
+        this.load.on('progress', (value) => {
+            console.log(Math.floor(value * 100) + '%');
+        });
+    }
+
+    create() {
+
+        this.add.rectangle(1920/2, 1080/2, 1920, 1080, 0xffffff);
+        this.add.text(25, 625, 'Loading the final skate park...', { fontSize: '40px Georgia', color: '#000000'});
+        this.loading = this.add.image(-200, 870, 'loading')
+            .setScale(.75);
+
+        this.tweens.add({
+            targets: this.loading,
+            x: 2500,
+            duration: 1500,
+            ease: 'Sine.InOut'
+        })
+
+        this.time.delayedCall(1500, () => {
+            this.scene.start('final'); 
+        });
     }
 }
 
@@ -414,9 +568,9 @@ const game = new Phaser.Game({
         default: 'arcade',
         arcade: {
             gravity: { y: 780 },
-            debug: true
+            debug: false
         }
     },
-    scene: [Intro, Pushing, Ollie, Final],
+    scene: [Intro, LoadingScene1, Pushing, LoadingScene2, Ollie, LoadingScene3, Final],
     title: "Physics SB",
 });
